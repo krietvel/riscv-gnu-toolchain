@@ -47,6 +47,8 @@ ASFLAGS_FOR_TARGET := $(ASFLAGS_FOR_TARGET_EXTRA) $(FLOAT_ASFLAGS)
 
 all: @default_target@
 
+nolib: stamps/build-gcc-nolib
+
 newlib: stamps/build-gcc-newlib
 
 ifneq ($(findstring --disable-multilib,$(MULTILIB_FLAGS)),)
@@ -202,6 +204,11 @@ stamps/build-binutils-newlib: src/binutils
 	$(MAKE) -C $(notdir $@) install
 	mkdir -p $(dir $@) && touch $@
 
+src/nolib-gcc: src/gcc
+	rm -rf $@ $@.tmp
+	cp -R src/gcc $@.tmp
+	mv $@.tmp $@
+
 src/newlib-gcc: src/gcc src/newlib
 	rm -rf $@ $@.tmp
 	cp -R src/gcc $@.tmp
@@ -209,6 +216,27 @@ src/newlib-gcc: src/gcc src/newlib
 	cp -R src/newlib/libgloss $@.tmp
 	$(srcdir)/scripts/cp_s $(srcdir)/newlib $@.tmp
 	mv $@.tmp $@
+
+stamps/build-gcc-nolib: src/nolib-gcc stamps/build-binutils-newlib
+	rm -rf $@ $(notdir $@)
+	mkdir $(notdir $@)
+	cd $(notdir $@) && $(CURDIR)/$</configure \
+		--target=riscv$(XLEN)-unknown-elf \
+		--prefix=$(INSTALL_DIR) \
+		--disable-shared \
+		--disable-threads \
+		--disable-bootstrap \
+		--enable-tls \
+		--enable-languages=c \
+		--disable-libmudflap \
+		--disable-libssp \
+		--disable-libquadmath \
+		--disable-libgomp \
+		--disable-nls \
+		$(WITH_ARCH)
+	$(MAKE) -C $(notdir $@) inhibit-libc=true
+	$(MAKE) -C $(notdir $@) install
+	mkdir -p $(dir $@) && touch $@
 
 stamps/build-gcc-newlib: src/newlib-gcc stamps/build-binutils-newlib
 	rm -rf $@ $(notdir $@)
