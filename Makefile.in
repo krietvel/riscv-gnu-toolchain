@@ -19,7 +19,7 @@ XLEN ?= @XLEN@
 WITH_ARCH ?= @WITH_ARCH@
 SYSROOT := $(INSTALL_DIR)/sysroot
 
-SHELL := /bin/sh
+SHELL := /bin/bash
 AWK := @GAWK@
 SED := @GSED@
 PATH := $(INSTALL_DIR)/bin:$(PATH)
