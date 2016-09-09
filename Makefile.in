@@ -247,7 +247,7 @@ stamps/build-gcc-newlib: src/newlib-gcc stamps/build-binutils-newlib
 		--disable-shared \
 		--disable-threads \
 		--enable-tls \
-		--enable-languages=c,c++ \
+		--enable-languages=c \
 		--with-newlib \
 		--disable-libmudflap \
 		--disable-libssp \

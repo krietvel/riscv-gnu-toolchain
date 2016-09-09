@@ -47,7 +47,7 @@ AC_ARG_ENABLE(linux,
 
 AS_IF([test "x$enable_linux" != xno],
 	[AC_SUBST(default_target, linux)],
-	[AC_SUBST(default_target, nolib)])
+	[AC_SUBST(default_target, newlib)])
 
 AC_ARG_WITH(xlen,
 	[AS_HELP_STRING([--with-xlen=XLEN],
